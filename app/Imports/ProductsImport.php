@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\ProductMasterList;
+use App\Models\ProductLog;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -20,17 +21,39 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
         // assume minus by 1 because no colum for quantity retrieved from the excel
         // if $row['status'] === 'Buy', add by 1
         // assume add by 1 because no colum for quantity retrieved from the excel
-        DB::transaction(function () use ($rows) {
-            foreach ($rows as $row) {
-                $product = ProductMasterList::firstOrFail($row['product_id']);
+        $products = ProductMasterList::whereIn(
+            'id',
+            collect($rows)->pluck('product_id')
+        )->get()->keyBy('id');
 
-                if ($row['status'] === 'Sold') {
-                    $product->decrement('quantity', 1);
-                } elseif ($row['status'] === 'Buy') {
-                    $product->increment('quantity', 1);
+        try {
+            DB::transaction(function () use ($rows, $products) {
+                foreach ($rows as $row) {
+                    $product = $products->get($row['product_id']);
+
+                    if (! $product) {
+                        logger()->warning('Product not found', [
+                            'product_id' => $row['product_id'],
+                        ]);
+                        continue;
+                    }
+
+                    match ($row['status']) {
+                        'Sold' => $product->decrement('quantity', 1),
+                        'Buy'  => $product->increment('quantity', 1),
+                        default => null,
+                    };
+
+                    ProductLog::create([
+                        'product_master_list_id' => $product->id,
+                        'status' => $row['status'],
+                        'quantity' => 1,
+                    ]);
                 }
-            }
-        });
+            });
+        } catch (\Throwable $th) {
+            info($th->getMessage());
+        }
     }
 
     public function chunkSize(): int

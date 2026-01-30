@@ -29,25 +29,22 @@ class ProductController extends Controller
 
     public function upload(Request $request)
     {
-        info('file uploaded');
-        // $request->validate([
-        //     'file' => 'required|file|mimes:csv,xlsx,xls', // 10MB max
-        // ]);
+        $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx,xls', // 10MB max
+        ]);
 
-        // $file = $request->file('file');
-        // $fileName = time() . '_' . $file->getClientOriginalName();
-        // $filePath = $file->storeAs('uploads', $fileName, 'local');
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('uploads', $fileName, 'local');
 
-        
-
-        // try {
-        //     Excel::queueImport(new ProductsImport, $filePath);
-        // } catch (\Throwable $e) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'File upload failed: ' . $e->getMessage(),
-        //     ]);
-        // }
+        try {
+            Excel::queueImport(new ProductsImport, $filePath);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File upload failed: ' . $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'success' => true,
