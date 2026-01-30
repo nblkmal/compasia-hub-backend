@@ -39,7 +39,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                     }
 
                     match ($row['status']) {
-                        'Sold' => $product->decrement('quantity', 1),
+                        'Sold' => $product->quantity > 0 ? $product->decrement('quantity', 1) : null,
                         'Buy'  => $product->increment('quantity', 1),
                         default => null,
                     };
