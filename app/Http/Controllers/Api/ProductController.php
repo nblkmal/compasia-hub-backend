@@ -10,6 +10,7 @@ use App\Models\ProductMasterList;
 use App\Models\ProductLog;
 use App\Http\Resources\ProductListResource;
 use App\Http\Resources\ProductLogResource;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -32,20 +33,27 @@ class ProductController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx,xls', // 10MB max
+            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240', // 10MB max
         ]);
 
         $file = $request->file('file');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('uploads', $fileName, 'local');
 
         try {
-            Excel::queueImport(new ProductsImport, $filePath);
-        } catch (\Throwable $e) {
+            // Excel file will be processed in background using Laravel Queue
+            Excel::queueImport(new ProductsImport, $file);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            // Laravel Excel validation failed
             return response()->json([
                 'success' => false,
-                'message' => 'File upload failed: ' . $e->getMessage(),
-            ]);
+                'message' => 'Import validation failed',
+                'errors' => $e->failures(),
+            ], 422);
+        } catch (\Throwable $e) {
+            Log::error('File upload failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'File upload failed',
+            ], 500);
         }
 
         return response()->json([
