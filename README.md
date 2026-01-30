@@ -37,6 +37,7 @@ __Extra:__ Product log table `product_log` is created to track inventory changes
 - MySQL
 - Laravel Queue (Redis)
 - RESTful API architecture
+- Implemented API Resources for cleaner and structured API responses
 
 ### File Processing
 - Excel parsing using `maatwebsite/excel`

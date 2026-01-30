@@ -7,6 +7,9 @@ use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ProductMasterList;
+use App\Models\ProductLog;
+use App\Http\Resources\ProductListResource;
+use App\Http\Resources\ProductLogResource;
 
 class ProductController extends Controller
 {
@@ -21,10 +24,9 @@ class ProductController extends Controller
                 ->orWhere('model', 'like', '%' . $request->search . '%');
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $products->paginate(3)    // intentionally reduced to only 3 per page so can see pagination
-        ]);
+        // intentionally reduced to only 3 per page so can see pagination
+        return ProductListResource::collection($products->paginate(3))
+        ->additional(['status' => 'success']);
     }
 
     public function upload(Request $request)
@@ -50,5 +52,12 @@ class ProductController extends Controller
             'success' => true,
             'message' => 'File uploaded and processing started',
         ]);
+    }
+
+    public function logs()
+    {
+        $logs = ProductLog::with(['product:id'])->paginate(10);
+        return ProductLogResource::collection($logs)
+        ->additional(['status' => 'success']);
     }
 }
