@@ -23,7 +23,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $products->paginate(10)
+            'data' => $products->paginate(3)    // intentionally reduced to only 3 per page so can see pagination
         ]);
     }
 
