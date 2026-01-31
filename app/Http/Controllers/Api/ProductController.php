@@ -22,7 +22,7 @@ class ProductController extends Controller
         // intentionally reduced to only 3 per page so can see pagination
 
         return ProductListResource::collection($products)
-        ->additional(['status' => 'success']);
+        ->additional(['success' => true]);
     }
 
     public function upload(Request $request)
@@ -61,6 +61,6 @@ class ProductController extends Controller
     {
         $logs = ProductLog::with(['product:id'])->paginate(10);
         return ProductLogResource::collection($logs)
-        ->additional(['status' => 'success']);
+        ->additional(['success' => true]);
     }
 }
