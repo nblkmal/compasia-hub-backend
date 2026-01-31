@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use App\Events\ImportCompleted;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterImport;
 
-class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, WithBatchInserts, ShouldQueue
+class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, WithBatchInserts, ShouldQueue, WithEvents
 {
     public function collection(Collection $rows)
     {
@@ -68,12 +70,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
         return 1000;
     }
 
-    public function __destruct()
+    public function registerEvents(): array
     {
-        try {
-            broadcast(new ImportCompleted());
-        } catch (\Throwable $e) {
-            // Ignore if broadcasting fails during destruction (common in tests)
-        }
+        return [
+            AfterImport::class => function(AfterImport $event) {
+                broadcast(new ImportCompleted());
+            },
+        ];
     }
 }
