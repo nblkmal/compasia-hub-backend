@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use App\Events\ImportCompleted;
 
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, WithBatchInserts, ShouldQueue
 {
@@ -64,5 +65,10 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function __destruct()
+    {
+        broadcast(new ImportCompleted());
     }
 }

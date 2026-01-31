@@ -1,5 +1,7 @@
 services:
     laravel.test:
+        env_file:
+            - .env
         platform: linux/amd64
         build:
             context: './vendor/laravel/sail/runtimes/8.5'
