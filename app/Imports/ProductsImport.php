@@ -56,7 +56,9 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 }
             });
         } catch (\Throwable $th) {
-            //
+            logger()->error('Error importing products', [
+                'error' => $th->getMessage(),
+            ]);
         }
     }
 
@@ -74,6 +76,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     {
         return [
             AfterImport::class => function(AfterImport $event) {
+                // broadcast the event to notify the client side
                 broadcast(new ImportCompleted());
             },
         ];
