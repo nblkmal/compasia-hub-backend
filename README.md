@@ -62,9 +62,10 @@ p/s: value for Pusher is intentionally predefined for quicker setup
 3. run ./vendor/bin/sail up -d
 p/s: If you are using windows, make sure WSL is working properly
 
-4. run ./vendor/bin/sail artisan migrate:fresh --seed
-5. run ./vendor/bin/sail artisan queue:work
-6. Browse http://laravel.test/api/health for quick health check. It should return alived
+4. run `docker ps` to verify all containers are ready and running
+5. run ./vendor/bin/sail artisan migrate:fresh --seed
+6. run ./vendor/bin/sail artisan queue:work
+7. Browse http://laravel.test/api/health for quick health check. It should return alived
 ```
 
 ## Windows Users (WSL + Docker + Laravel Sail)
