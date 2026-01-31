@@ -1,4 +1,4 @@
-# PHP Developer Assignment – Product Inventory Management
+# compasia-server
 
 ## Overview
 
