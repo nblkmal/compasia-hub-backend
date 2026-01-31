@@ -16,17 +16,12 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = ProductMasterList::query();
-
-        if ($request->has('search')) {
-            $products->where('id', 'like', '%' . $request->search . '%')
-                ->orWhere('type', 'like', '%' . $request->search . '%')
-                ->orWhere('brand', 'like', '%' . $request->search . '%')
-                ->orWhere('model', 'like', '%' . $request->search . '%');
-        }
-
+        $products = ProductMasterList::query()
+            ->search($request->string('search'))
+            ->paginate(3);
         // intentionally reduced to only 3 per page so can see pagination
-        return ProductListResource::collection($products->paginate(3))
+
+        return ProductListResource::collection($products)
         ->additional(['status' => 'success']);
     }
 
