@@ -78,3 +78,21 @@ Ubuntu installed via WSL
 Docker Desktop for Windows
 
 Docker Desktop configured to use WSL 2
+
+## Unit Test
+If just want to make sure the feature is working, run the test
+
+```sh
+./vendor/bin/sail artisan test
+
+   PASS  Tests\Feature\ProductControllerTest
+  ✓ index returns paginated products                                               1.24s  
+  ✓ index can search products                                                      0.03s  
+  ✓ upload file successfully                                                       0.03s  
+  ✓ upload file validation fails when file is missing                              0.02s  
+  ✓ upload file validation fails with invalid file type                            0.01s  
+  ✓ logs returns paginated logs                                                    0.03s  
+
+  Tests:    6 passed (80 assertions)
+  Duration: 1.52s
+```
