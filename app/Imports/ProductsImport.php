@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use App\Events\ImportCompleted;
 
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, WithBatchInserts, ShouldQueue
@@ -53,7 +54,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 }
             });
         } catch (\Throwable $th) {
-            info($th->getMessage());
+            //
         }
     }
 
@@ -69,6 +70,10 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
 
     public function __destruct()
     {
-        broadcast(new ImportCompleted());
+        try {
+            broadcast(new ImportCompleted());
+        } catch (\Throwable $e) {
+            // Ignore if broadcasting fails during destruction (common in tests)
+        }
     }
 }

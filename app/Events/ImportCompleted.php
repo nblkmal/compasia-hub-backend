@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ImportCompleted implements ShouldBroadcast
 {
@@ -18,7 +19,7 @@ class ImportCompleted implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct() {
-        info('hit import completed');
+        //
     }
 
     /**
