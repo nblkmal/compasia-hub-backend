@@ -32,6 +32,10 @@ __Extra:__ Product log table `product_log` is created to track inventory changes
 
 ## Tech Stack
 
+### Prerequisites
+- Docker for Sail
+- Composer
+
 ### Backend
 - PHP **Laravel 12**
 - MySQL
