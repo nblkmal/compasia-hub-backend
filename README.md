@@ -38,19 +38,26 @@ __Extra:__ Product log table `product_log` is created to track inventory changes
 - Laravel Queue (Redis)
 - RESTful API architecture
 - Implemented API Resources for cleaner and structured API responses
+- Laravel Sail for docker environment
+- Laravel Unit Test with PHPUnit
+- Laravel Seeder for initial dataset
+- Laravel Event Broadcast with Pusher
 
 ### File Processing
 - Excel parsing using `maatwebsite/excel`
 
 ---
 
-## Get start with the project
+## Setup Instructions
 
 ```sh
 1. run composer install
 2. cp .env.example .env
+p/s: value for Pusher is intentionally predefined for quicker setup
+
 3. run ./vendor/bin/sail up -d
 p/s: If you are using windows, make sure WSL is working properly
+
 4. run ./vendor/bin/sail artisan migrate --seed
 5. run ./vendor/bin/sail artisan queue:work
 ```
