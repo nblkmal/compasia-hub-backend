@@ -12,10 +12,11 @@ class ProductMasterList extends Model
         'brand',
         'model',
         'capacity',
+        'quantity',
         'updated_at',   // simple flag to know when the latest the item is updated
     ];
 
-    public function scopeSearch($query, string $search = null)
+    public function scopeSearch($query, ?string $search = null)
     {
         if (! $search) {
             return $query;
