@@ -51,10 +51,10 @@ class ProductControllerTest extends TestCase
                 ],
                 'links',
                 'meta',
-                'status'
+                'success'
             ])
             ->assertJsonCount(3, 'data') // Paginated at 3 per page in controller
-            ->assertJson(['status' => 'success']);
+            ->assertJson(['success' => true]);
     }
 
     /**
@@ -177,9 +177,9 @@ class ProductControllerTest extends TestCase
                 ],
                 'links',
                 'meta',
-                'status'
+                'success'
             ])
             ->assertJsonCount(10, 'data') // Paginated at 10 per page in controller
-            ->assertJson(['status' => 'success']);
+            ->assertJson(['success' => true]);
     }
 }
