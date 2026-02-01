@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\ProductStatus;
 
 class ProductLog extends Model
 {
@@ -11,6 +12,10 @@ class ProductLog extends Model
         'product_master_list_id',
         'status',
         'quantity',
+    ];
+
+    protected $casts = [
+        'status' => ProductStatus::class,
     ];
 
     public function product(): BelongsTo

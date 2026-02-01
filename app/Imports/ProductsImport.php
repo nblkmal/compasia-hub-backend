@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Events\ImportCompleted;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterImport;
+use App\Enums\ProductStatus;
 
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, WithBatchInserts, ShouldQueue, WithEvents
 {
@@ -43,8 +44,8 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                     }
 
                     match ($row['status']) {
-                        'Sold' => $product->quantity >= 0 ? $product->decrement('quantity', 1) : null,
-                        'Buy'  => $product->increment('quantity', 1),
+                        ProductStatus::SOLD->value => $product->quantity >= 0 ? $product->decrement('quantity', 1) : null,
+                        ProductStatus::BUY->value  => $product->increment('quantity', 1),
                         default => null,
                     };
 
