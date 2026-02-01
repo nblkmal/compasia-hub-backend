@@ -57,6 +57,7 @@ class ProductController extends Controller
         ]);
     }
 
+    // not in requirements, but just put it here for nice to have
     public function logs()
     {
         $logs = ProductLog::with(['product:id'])->paginate(10);

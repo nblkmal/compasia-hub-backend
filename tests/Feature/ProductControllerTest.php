@@ -163,7 +163,7 @@ class ProductControllerTest extends TestCase
         for ($i = 1; $i <= 15; $i++) {
             ProductLog::create([
                 'product_master_list_id' => $product->id,
-                'status' => 'imported',
+                'status' => 'Sold', // just for log dummy
                 'quantity' => 1,
             ]);
         }
